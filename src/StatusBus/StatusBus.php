@@ -65,9 +65,18 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
      */
     public function addStatusMessage(StatusMessage $statusMessage): void
     {
+        // If the status message is already shown, do not show again
+        if ($statusMessage->isShown()) {
+            return;
+        }
+
+        // Send status message to all handlers
         foreach ($this->statusBusHandlers as $statusBusHandler) {
             $statusBusHandler->addStatusMessage($statusMessage);
         }
+
+        // Mark status message as shown
+        $statusMessage->setIsShown(true);
     }
 
     /**

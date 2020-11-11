@@ -37,21 +37,15 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
     /**
      * @var string
      */
-    private string $technicalMessageI18nKey = 'symfony_status_bus.technical_message';
+    private string $technicalMessageI18nKey = 'status_message.technical_message';
 
     /**
-     * @param Session $session
+     * @param Session                  $session
+     * @param TranslatorInterface|null $translator
      */
-    public function __construct(Session $session)
+    public function __construct(Session $session, ?TranslatorInterface $translator = null)
     {
         $this->session = $session;
-    }
-
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function setTranslator(TranslatorInterface $translator): void
-    {
         $this->translator = $translator;
     }
 

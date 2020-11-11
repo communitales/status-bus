@@ -50,6 +50,11 @@ class StatusMessage
     private bool $isTechnical;
 
     /**
+     * @var bool
+     */
+    private bool $isShown = false;
+
+    /**
      * @param string  $type        Should be one of the type constants.
      * @param string  $messageId   i18n message key or actual message if no translator is used.
      * @param mixed[] $parameters  Optional parameters to generate the i18n message.
@@ -161,6 +166,22 @@ class StatusMessage
     public function setIsTechnical(bool $isTechnical): void
     {
         $this->isTechnical = $isTechnical;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShown(): bool
+    {
+        return $this->isShown;
+    }
+
+    /**
+     * @param bool $isShown
+     */
+    public function setIsShown(bool $isShown): void
+    {
+        $this->isShown = $isShown;
     }
 
 }

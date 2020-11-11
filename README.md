@@ -11,17 +11,31 @@ So any class of the application is able to send messages to the UI.
 composer require communitales/status-bus
 ```
 
-This package is framework-less and contains only interfaces and abstract classes.
-You may also install a framework specific version.
+Setup for Symfony in `services.yaml`:
 
 ```
-composer require communitales/status-bus-symfony
-```
+services:
 
+    _instanceof:
+        Communitales\Component\StatusBus\StatusBusAwareInterface:
+            calls:
+                - [setStatusBus, ['@Communitales\Component\StatusBus\StatusBus']]
+
+    Communitales\Component\StatusBus\Handler\SymfonySessionFlashBagHandler:
+        arguments:
+            - '@session'
+            # Add the translator for i18n support
+            # - '@translator'
+        tags: ['communitales.status_handler']
+
+    Communitales\Component\StatusBus\StatusBus:
+        tags: ['communitales.status_handler']
+
+```
 
 ## Usage
 
-You can send messages to the status 
+You can send messages to the StatusBus
 
 ```
 

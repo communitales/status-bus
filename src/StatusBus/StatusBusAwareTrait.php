@@ -16,9 +16,9 @@ trait StatusBusAwareTrait
 {
 
     /**
-     * @var StatusBusInterface
+     * @var StatusBusInterface|null
      */
-    protected StatusBusInterface $statusBus;
+    protected ?StatusBusInterface $statusBus = null;
 
     /**
      * @param StatusBusInterface $statusBus
