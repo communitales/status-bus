@@ -16,6 +16,10 @@ Setup for Symfony in `services.yaml`:
 ```
 services:
 
+    _defaults:
+        bind:
+            iterable $statusBusHandlers: !tagged_iterator communitales.status_handler
+
     _instanceof:
         Communitales\Component\StatusBus\StatusBusAwareInterface:
             calls:
@@ -28,8 +32,7 @@ services:
             # - '@translator'
         tags: ['communitales.status_handler']
 
-    Communitales\Component\StatusBus\StatusBus:
-        tags: ['communitales.status_handler']
+    Communitales\Component\StatusBus\StatusBus: ~
 
 ```
 
