@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright   Copyright (c) 2020 Communitales GmbH (https://www.communitales.com/)
+ * @copyright   Copyright (c) 2020 - 2021 Communitales GmbH (https://www.communitales.com/)
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -41,7 +41,6 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     public function __construct(iterable $statusBusHandlers)
     {
         try {
-            /** @var StatusBusHandlerInterface $statusBusHandler */
             foreach ($statusBusHandlers->getIterator() as $statusBusHandler) {
                 $this->addStatusBusHandler($statusBusHandler);
             }
@@ -82,11 +81,12 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     /**
      * @param string  $message
      * @param mixed[] $parameters
+     * @param bool    $isTechnical
      */
-    public function addError(string $message, array $parameters = []): void
+    public function addError(string $message, array $parameters = [], bool $isTechnical = false): void
     {
         $this->setStatus(self::STATUS_ERROR);
-        $this->addStatusMessage(StatusMessage::createErrorMessage($message, $parameters));
+        $this->addStatusMessage(StatusMessage::createErrorMessage($message, $parameters, $isTechnical));
     }
 
     /**
