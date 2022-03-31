@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright   Copyright (c) 2020 - 2021 Communitales GmbH (https://www.communitales.com/)
+ * @copyright   Copyright (c) 2020 - 2022 Communitales GmbH (https://www.communitales.com/)
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,6 +10,7 @@
 namespace Communitales\Component\StatusBus\Handler;
 
 use Communitales\Component\StatusBus\StatusMessage;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -20,9 +21,9 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
 {
 
     /**
-     * @var Session
+     * @var RequestStack
      */
-    private Session $session;
+    private RequestStack $requestStack;
 
     /**
      * @var TranslatorInterface|null
@@ -40,17 +41,19 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
     private string $technicalMessageI18nKey = 'status_message.technical_message';
 
     /**
-     * @param Session                  $session
+     * @param RequestStack             $requestStack
      * @param TranslatorInterface|null $translator
      */
-    public function __construct(Session $session, ?TranslatorInterface $translator = null)
+    public function __construct(RequestStack $requestStack, ?TranslatorInterface $translator)
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->translator = $translator;
     }
 
     /**
      * @param string $technicalMessage
+     *
+     * @return void
      */
     public function setTechnicalMessage(string $technicalMessage): void
     {
@@ -59,6 +62,8 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
 
     /**
      * @param string $technicalMessageI18nKey
+     *
+     * @return void
      */
     public function setTechnicalMessageI18nKey(string $technicalMessageI18nKey): void
     {
@@ -67,6 +72,8 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
 
     /**
      * @param StatusMessage $statusMessage
+     *
+     * @return void
      */
     public function addStatusMessage(StatusMessage $statusMessage): void
     {
@@ -84,7 +91,10 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
             }
         }
 
-        $this->session->getFlashBag()->add($statusMessage->getType(), $message);
+        $session = $this->requestStack->getSession();
+        if ($session instanceof Session) {
+            $session->getFlashBag()->add($statusMessage->getType(), $message);
+        }
     }
 
 }

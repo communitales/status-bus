@@ -27,7 +27,7 @@ services:
 
     Communitales\Component\StatusBus\Handler\SymfonySessionFlashBagHandler:
         arguments:
-            - '@session'
+            - '@Symfony\Component\HttpFoundation\RequestStack'
             # Add the translator for i18n support
             # - '@translator'
         tags: ['communitales.status_handler']

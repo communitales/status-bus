@@ -18,9 +18,9 @@
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-symfony": "^1.0",
         "phpunit/phpunit": "^9.5",
-        "psr/log": "2.0",
-        "symfony/http-foundation": "^5.3",
-        "symfony/translation": "^5.3",
+        "psr/log": "2.0|3.0",
+        "symfony/http-foundation": "^6.0",
+        "symfony/translation": "^6.0",
         "vimeo/psalm": "^4.1"
     },
     "autoload": {

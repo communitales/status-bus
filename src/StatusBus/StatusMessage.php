@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright   Copyright (c) 2020 - 2021 Communitales GmbH (https://www.communitales.com/)
+ * @copyright   Copyright (c) 2020 - 2022 Communitales GmbH (https://www.communitales.com/)
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -162,6 +162,8 @@ class StatusMessage
 
     /**
      * @param bool $isTechnical
+     *
+     * @return void
      */
     public function setIsTechnical(bool $isTechnical): void
     {
@@ -178,6 +180,8 @@ class StatusMessage
 
     /**
      * @param bool $isShown
+     *
+     * @return void
      */
     public function setIsShown(bool $isShown): void
     {
