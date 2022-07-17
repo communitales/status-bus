@@ -41,7 +41,7 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
     private string $technicalMessageI18nKey = 'status_message.technical_message';
 
     /**
-     * @param RequestStack             $requestStack
+     * @param RequestStack $requestStack
      * @param TranslatorInterface|null $translator
      */
     public function __construct(RequestStack $requestStack, ?TranslatorInterface $translator)
@@ -91,7 +91,14 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
             }
         }
 
-        $session = $this->requestStack->getSession();
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request === null) {
+            return;
+        }
+        if (!$request->hasSession()) {
+            return;
+        }
+        $session = $request->getSession();
         if ($session instanceof Session) {
             $session->getFlashBag()->add($statusMessage->getType(), $message);
         }
