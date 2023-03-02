@@ -1,7 +1,6 @@
 <?php
-
 /**
- * @copyright   Copyright (c) 2020 - 2022 Communitales GmbH (https://www.communitales.com/)
+ * @copyright   Copyright (c) 2020 - 2023 Communitales GmbH (https://www.communitales.com/)
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,11 +13,25 @@ namespace Communitales\Component\StatusBus;
  */
 class StatusMessage
 {
-
     // The message types are mapped to bootstrap color types
+    /**
+     * @var string
+     */
     public const TYPE_SUCCESS = 'success';
+
+    /**
+     * @var string
+     */
     public const TYPE_ERROR = 'danger';
+
+    /**
+     * @var string
+     */
     public const TYPE_WARNING = 'warning';
+
+    /**
+     * @var string
+     */
     public const TYPE_INFO = 'info';
 
     /**
@@ -40,7 +53,7 @@ class StatusMessage
      *
      * @var mixed[]
      */
-    private array $parameters;
+    private array $parameters = [];
 
     /**
      * This message represents a technical error message.
@@ -55,10 +68,10 @@ class StatusMessage
     private bool $isShown = false;
 
     /**
-     * @param string  $type        Should be one of the type constants.
-     * @param string  $messageId   i18n message key or actual message if no translator is used.
-     * @param mixed[] $parameters  Optional parameters to generate the i18n message.
-     * @param bool    $isTechnical This message represents a technical error message.
+     * @param string $type Should be one of the type constants.
+     * @param string $messageId i18n message key or actual message if no translator is used.
+     * @param mixed[] $parameters Optional parameters to generate the i18n message.
+     * @param bool $isTechnical This message represents a technical error message.
      */
     public function __construct(
         string $type,
@@ -73,7 +86,7 @@ class StatusMessage
     }
 
     /**
-     * @param string  $messageId
+     * @param string $messageId
      * @param mixed[] $parameters
      *
      * @return StatusMessage
@@ -84,9 +97,9 @@ class StatusMessage
     }
 
     /**
-     * @param string  $messageId
+     * @param string $messageId
      * @param mixed[] $parameters
-     * @param bool    $isTechnical
+     * @param bool $isTechnical
      *
      * @return StatusMessage
      */
@@ -99,9 +112,9 @@ class StatusMessage
     }
 
     /**
-     * @param string  $messageId
+     * @param string $messageId
      * @param mixed[] $parameters
-     * @param bool    $isTechnical
+     * @param bool $isTechnical
      *
      * @return StatusMessage
      */
@@ -114,9 +127,9 @@ class StatusMessage
     }
 
     /**
-     * @param string  $messageId
+     * @param string $messageId
      * @param mixed[] $parameters
-     * @param bool    $isTechnical
+     * @param bool $isTechnical
      *
      * @return StatusMessage
      */
@@ -187,5 +200,4 @@ class StatusMessage
     {
         $this->isShown = $isShown;
     }
-
 }

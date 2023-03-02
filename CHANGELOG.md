@@ -1,9 +1,15 @@
 # CHANGELOG
 
+## 1.2.0
+
+* Change: Upgrade to PHP 8.2 and improve code quality
+
+
 ## 1.1.0
 
 * Change: Upgrade to Symfony 6. SymfonySessionFlashBagHandler requires
   now `@Symfony\Component\HttpFoundation\RequestStack` instead of `@session` as first parameter.
+
 
 ## 1.0.3
 

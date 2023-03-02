@@ -1,7 +1,6 @@
 <?php
-
 /**
- * @copyright   Copyright (c) 2020 - 2022 Communitales GmbH (https://www.communitales.com/)
+ * @copyright   Copyright (c) 2020 - 2023 Communitales GmbH (https://www.communitales.com/)
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,7 +18,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
 {
-
     /**
      * @var RequestStack
      */
@@ -41,7 +39,7 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
     private string $technicalMessageI18nKey = 'status_message.technical_message';
 
     /**
-     * @param RequestStack             $requestStack
+     * @param RequestStack $requestStack
      * @param TranslatorInterface|null $translator
      */
     public function __construct(RequestStack $requestStack, ?TranslatorInterface $translator)
@@ -96,5 +94,4 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
             $session->getFlashBag()->add($statusMessage->getType(), $message);
         }
     }
-
 }

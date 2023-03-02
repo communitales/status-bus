@@ -1,7 +1,6 @@
 <?php
-
 /**
- * @copyright   Copyright (c) 2020 - 2022 Communitales GmbH (https://www.communitales.com/)
+ * @copyright   Copyright (c) 2020 - 2023 Communitales GmbH (https://www.communitales.com/)
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,7 +19,6 @@ use Psr\Log\LoggerAwareInterface;
  */
 class StatusBus implements StatusBusInterface, LoggerAwareInterface
 {
-
     use LogAwareTrait;
 
     /**
@@ -83,9 +81,9 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     }
 
     /**
-     * @param string  $message
+     * @param string $message
      * @param mixed[] $parameters
-     * @param bool    $isTechnical
+     * @param bool $isTechnical
      *
      * @return void
      */
@@ -96,7 +94,7 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     }
 
     /**
-     * @param string  $message
+     * @param string $message
      * @param mixed[] $parameters
      *
      * @return void
@@ -108,7 +106,7 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     }
 
     /**
-     * @param string  $message
+     * @param string $message
      * @param mixed[] $parameters
      *
      * @return void
@@ -120,7 +118,7 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     }
 
     /**
-     * @param string  $message
+     * @param string $message
      * @param mixed[] $parameters
      *
      * @return void
@@ -155,6 +153,7 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
                 if ($this->status !== self::STATUS_ERROR) {
                     $this->status = self::STATUS_SUCCESS;
                 }
+
                 break;
             case self::STATUS_ERROR:
                 // Set status to error
@@ -162,5 +161,4 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
                 break;
         }
     }
-
 }
