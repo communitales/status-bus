@@ -5,6 +5,11 @@
 * Change: Upgrade to PHP 8.2 and improve code quality
 
 
+## 1.1.1
+
+* Fix: SymfonySessionFlashBagHandler throw error, when current request has no active session
+
+
 ## 1.1.0
 
 * Change: Upgrade to Symfony 6. SymfonySessionFlashBagHandler requires

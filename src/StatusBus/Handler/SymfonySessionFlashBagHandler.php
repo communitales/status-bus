@@ -9,6 +9,7 @@
 namespace Communitales\Component\StatusBus\Handler;
 
 use Communitales\Component\StatusBus\StatusMessage;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -89,7 +90,16 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
             }
         }
 
-        $session = $this->requestStack->getSession();
+        $request = $this->requestStack->getCurrentRequest();
+        if (!$request instanceof Request) {
+            return;
+        }
+
+        if (!$request->hasSession()) {
+            return;
+        }
+
+        $session = $request->getSession();
         if ($session instanceof Session) {
             $session->getFlashBag()->add($statusMessage->getType(), $message);
         }
