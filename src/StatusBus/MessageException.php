@@ -13,15 +13,10 @@ use Throwable;
 
 /**
  * Exception to catch and display as message.
- * Should contain a german error message.
+ * Should contain a translated error message.
  */
 class MessageException extends RuntimeException
 {
-    /**
-     * @param Throwable $exception
-     *
-     * @return MessageException
-     */
     public static function fromException(Throwable $exception): MessageException
     {
         return new self($exception->getMessage(), (int)$exception->getCode(), $exception);

@@ -8,21 +8,10 @@
 
 namespace Communitales\Component\StatusBus;
 
-/**
- * Trait StatusBusAwareTrait
- */
 trait StatusBusAwareTrait
 {
-    /**
-     * @var StatusBusInterface
-     */
     protected StatusBusInterface $statusBus;
 
-    /**
-     * @param StatusBusInterface $statusBus
-     *
-     * @return void
-     */
     public function setStatusBus(StatusBusInterface $statusBus): void
     {
         $this->statusBus = $statusBus;

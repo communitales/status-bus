@@ -22,9 +22,7 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     use LogAwareTrait;
 
     /**
-     * The status will
-     *
-     * @var string
+     * The status
      */
     private string $status = self::STATUS_NORMAL;
 
@@ -47,11 +45,6 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
         }
     }
 
-    /**
-     * @param StatusBusHandlerInterface $statusBusHandler
-     *
-     * @return void
-     */
     public function addStatusBusHandler(StatusBusHandlerInterface $statusBusHandler): void
     {
         $this->statusBusHandlers[] = $statusBusHandler;
@@ -59,10 +52,6 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
 
     /**
      * Send status message to all status bus handlers.
-     *
-     * @param StatusMessage $statusMessage
-     *
-     * @return void
      */
     public function addStatusMessage(StatusMessage $statusMessage): void
     {
@@ -81,11 +70,7 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     }
 
     /**
-     * @param string $message
      * @param mixed[] $parameters
-     * @param bool $isTechnical
-     *
-     * @return void
      */
     public function addError(string $message, array $parameters = [], bool $isTechnical = false): void
     {
@@ -94,10 +79,7 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     }
 
     /**
-     * @param string $message
      * @param mixed[] $parameters
-     *
-     * @return void
      */
     public function addSuccess(string $message, array $parameters = []): void
     {
@@ -106,10 +88,7 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     }
 
     /**
-     * @param string $message
      * @param mixed[] $parameters
-     *
-     * @return void
      */
     public function addInfo(string $message, array $parameters = []): void
     {
@@ -118,10 +97,7 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     }
 
     /**
-     * @param string $message
      * @param mixed[] $parameters
-     *
-     * @return void
      */
     public function addWarning(string $message, array $parameters = []): void
     {
@@ -129,19 +105,11 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
         $this->addStatusMessage(StatusMessage::createWarningMessage($message, $parameters));
     }
 
-    /**
-     * @return string
-     */
     public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * @param string $status
-     *
-     * @return void
-     */
     private function setStatus(string $status): void
     {
         switch ($status) {

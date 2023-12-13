@@ -13,10 +13,5 @@ namespace Communitales\Component\StatusBus;
  */
 interface StatusBusAwareInterface
 {
-    /**
-     * @param StatusBusInterface $statusBus
-     *
-     * @return void
-     */
     public function setStatusBus(StatusBusInterface $statusBus): void;
 }

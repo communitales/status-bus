@@ -10,15 +10,7 @@ namespace Communitales\Component\StatusBus\Handler;
 
 use Communitales\Component\StatusBus\StatusMessage;
 
-/**
- * Interface StatusBusHandlerInterface
- */
 interface StatusBusHandlerInterface
 {
-    /**
-     * @param StatusMessage $statusMessage
-     *
-     * @return void
-     */
     public function addStatusMessage(StatusMessage $statusMessage): void;
 }

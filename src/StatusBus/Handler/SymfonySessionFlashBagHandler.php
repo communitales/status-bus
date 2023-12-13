@@ -39,44 +39,25 @@ class SymfonySessionFlashBagHandler implements StatusBusHandlerInterface
      */
     private string $technicalMessageI18nKey = 'status_message.technical_message';
 
-    /**
-     * @param RequestStack $requestStack
-     * @param TranslatorInterface|null $translator
-     */
     public function __construct(RequestStack $requestStack, ?TranslatorInterface $translator)
     {
         $this->requestStack = $requestStack;
         $this->translator = $translator;
     }
 
-    /**
-     * @param string $technicalMessage
-     *
-     * @return void
-     */
     public function setTechnicalMessage(string $technicalMessage): void
     {
         $this->technicalMessage = $technicalMessage;
     }
 
-    /**
-     * @param string $technicalMessageI18nKey
-     *
-     * @return void
-     */
     public function setTechnicalMessageI18nKey(string $technicalMessageI18nKey): void
     {
         $this->technicalMessageI18nKey = $technicalMessageI18nKey;
     }
 
-    /**
-     * @param StatusMessage $statusMessage
-     *
-     * @return void
-     */
     public function addStatusMessage(StatusMessage $statusMessage): void
     {
-        if ($this->translator !== null) {
+        if ($this->translator instanceof TranslatorInterface) {
             // with i18n
             $message = $this->translator->trans($statusMessage->getMessageId(), $statusMessage->getParameters());
             if ($statusMessage->isTechnical()) {

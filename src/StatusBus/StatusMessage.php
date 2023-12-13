@@ -8,43 +8,21 @@
 
 namespace Communitales\Component\StatusBus;
 
-/**
- * Class FlashMessage
- */
 class StatusMessage
 {
     // The message types are mapped to bootstrap color types
-    /**
-     * @var string
-     */
     public const TYPE_SUCCESS = 'success';
-
-    /**
-     * @var string
-     */
     public const TYPE_ERROR = 'danger';
-
-    /**
-     * @var string
-     */
     public const TYPE_WARNING = 'warning';
-
-    /**
-     * @var string
-     */
     public const TYPE_INFO = 'info';
 
     /**
      * Should be one of the type constants.
-     *
-     * @var string
      */
     private string $type;
 
     /**
      * i18n message key or actual message if no translator is used.
-     *
-     * @var string
      */
     private string $messageId;
 
@@ -57,13 +35,11 @@ class StatusMessage
 
     /**
      * This message represents a technical error message.
-     *
-     * @var bool
      */
     private bool $isTechnical;
 
     /**
-     * @var bool
+     * The message was already displayed
      */
     private bool $isShown = false;
 
@@ -86,10 +62,7 @@ class StatusMessage
     }
 
     /**
-     * @param string $messageId
      * @param mixed[] $parameters
-     *
-     * @return StatusMessage
      */
     public static function createSuccessMessage(string $messageId, array $parameters = []): StatusMessage
     {
@@ -97,11 +70,7 @@ class StatusMessage
     }
 
     /**
-     * @param string $messageId
      * @param mixed[] $parameters
-     * @param bool $isTechnical
-     *
-     * @return StatusMessage
      */
     public static function createErrorMessage(
         string $messageId,
@@ -112,11 +81,7 @@ class StatusMessage
     }
 
     /**
-     * @param string $messageId
      * @param mixed[] $parameters
-     * @param bool $isTechnical
-     *
-     * @return StatusMessage
      */
     public static function createWarningMessage(
         string $messageId,
@@ -127,11 +92,7 @@ class StatusMessage
     }
 
     /**
-     * @param string $messageId
      * @param mixed[] $parameters
-     * @param bool $isTechnical
-     *
-     * @return StatusMessage
      */
     public static function createInfoMessage(
         string $messageId,
@@ -141,17 +102,11 @@ class StatusMessage
         return new self(self::TYPE_INFO, $messageId, $parameters, $isTechnical);
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @return string
-     */
     public function getMessageId(): string
     {
         return $this->messageId;
@@ -165,37 +120,21 @@ class StatusMessage
         return $this->parameters;
     }
 
-    /**
-     * @return bool
-     */
     public function isTechnical(): bool
     {
         return $this->isTechnical;
     }
 
-    /**
-     * @param bool $isTechnical
-     *
-     * @return void
-     */
     public function setIsTechnical(bool $isTechnical): void
     {
         $this->isTechnical = $isTechnical;
     }
 
-    /**
-     * @return bool
-     */
     public function isShown(): bool
     {
         return $this->isShown;
     }
 
-    /**
-     * @param bool $isShown
-     *
-     * @return void
-     */
     public function setIsShown(bool $isShown): void
     {
         $this->isShown = $isShown;
