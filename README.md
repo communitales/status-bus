@@ -1,6 +1,6 @@
 # Communitales StatusBus Component
 
-Send status messages to a central status bus. 
+Send status messages to a central status bus.
 
 The content of the status can be displayed in the UI or logged into a file.
 So any service class of the application is able to send messages to the UI.
@@ -41,6 +41,7 @@ You can send messages to the StatusBus
 
 use Communitales\Component\StatusBus\StatusBusAwareInterface;
 use Communitales\Component\StatusBus\StatusBusAwareTrait;
+use Symfony\Component\Translation\TranslatableMessage;
 
 class MyClass implements StatusBusAwareInterface
 {
@@ -51,10 +52,10 @@ class MyClass implements StatusBusAwareInterface
         // ...
 
         // You can use the status bus without i18n
-        $this->statusBus->addSuccess('The item "example" has been successfully created.');
+        $this->statusBus->addSuccess(new TranslatableMessage('The item "example" has been successfully created.'));
 
         // And you can use the status bus with i18n
-        $this->statusBus->addSuccess('action_item.success', ['item_name' => 'example']);
+        $this->statusBus->addSuccess(new TranslatableMessage('action_item.success', ['item_name' => 'example']));
     }
 }
 
