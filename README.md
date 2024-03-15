@@ -3,7 +3,8 @@
 Send status messages to a central status bus. 
 
 The content of the status can be displayed in the UI or logged into a file.
-So any class of the application is able to send messages to the UI.
+So any service class of the application is able to send messages to the UI.
+
 
 ## Setup
 
@@ -26,10 +27,6 @@ services:
                 - [setStatusBus, ['@Communitales\Component\StatusBus\StatusBus']]
 
     Communitales\Component\StatusBus\Handler\SymfonySessionFlashBagHandler:
-        arguments:
-            - '@Symfony\Component\HttpFoundation\RequestStack'
-            # Add the translator for i18n support
-            # - '@translator'
         tags: ['communitales.status_handler']
 
     Communitales\Component\StatusBus\StatusBus: ~

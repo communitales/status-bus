@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (c) 2020 - 2023 Communitales GmbH (https://www.communitales.com/)
+ * @copyright   Copyright (c) 2020 - 2024 Communitales GmbH (https://www.communitales.com/)
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,12 +13,13 @@ use Throwable;
 
 /**
  * Exception to catch and display as message.
- * Should contain a translated error message.
  */
 class MessageException extends RuntimeException
 {
-    public static function fromException(Throwable $exception): MessageException
+    public function __construct(public readonly StatusMessage $statusMessage, ?Throwable $exception = null)
     {
-        return new self($exception->getMessage(), (int)$exception->getCode(), $exception);
+        if ($exception instanceof Throwable) {
+            parent::__construct($exception->getMessage(), (int)$exception->getCode(), $exception);
+        }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (c) 2020 - 2023 Communitales GmbH (https://www.communitales.com/)
+ * @copyright   Copyright (c) 2020 - 2024 Communitales GmbH (https://www.communitales.com/)
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -8,16 +8,18 @@
 
 namespace Communitales\Component\StatusBus;
 
+use Override;
 use Communitales\Component\Log\LogAwareTrait;
 use Communitales\Component\StatusBus\Handler\StatusBusHandlerInterface;
-use Exception;
 use IteratorAggregate;
 use Psr\Log\LoggerAwareInterface;
+use Symfony\Component\Translation\TranslatableMessage;
+use Throwable;
 
 /**
  * Class StatusBus
  */
-class StatusBus implements StatusBusInterface, LoggerAwareInterface
+class StatusBus implements LoggerAwareInterface, StatusBusInterface
 {
     use LogAwareTrait;
 
@@ -40,8 +42,8 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
             foreach ($statusBusHandlers->getIterator() as $statusBusHandler) {
                 $this->addStatusBusHandler($statusBusHandler);
             }
-        } catch (Exception $exception) {
-            $this->logException($exception);
+        } catch (Throwable $throwable) {
+            $this->logException($throwable);
         }
     }
 
@@ -53,6 +55,7 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
     /**
      * Send status message to all status bus handlers.
      */
+    #[Override]
     public function addStatusMessage(StatusMessage $statusMessage): void
     {
         // If the status message is already shown, do not show again
@@ -69,42 +72,35 @@ class StatusBus implements StatusBusInterface, LoggerAwareInterface
         $statusMessage->setIsShown(true);
     }
 
-    /**
-     * @param mixed[] $parameters
-     */
-    public function addError(string $message, array $parameters = [], bool $isTechnical = false): void
+    #[Override]
+    public function addError(TranslatableMessage $message): void
     {
         $this->setStatus(self::STATUS_ERROR);
-        $this->addStatusMessage(StatusMessage::createErrorMessage($message, $parameters, $isTechnical));
+        $this->addStatusMessage(StatusMessage::createErrorMessage($message));
     }
 
-    /**
-     * @param mixed[] $parameters
-     */
-    public function addSuccess(string $message, array $parameters = []): void
+    #[Override]
+    public function addSuccess(TranslatableMessage $message): void
     {
         $this->setStatus(self::STATUS_SUCCESS);
-        $this->addStatusMessage(StatusMessage::createSuccessMessage($message, $parameters));
+        $this->addStatusMessage(StatusMessage::createSuccessMessage($message));
     }
 
-    /**
-     * @param mixed[] $parameters
-     */
-    public function addInfo(string $message, array $parameters = []): void
+    #[Override]
+    public function addInfo(TranslatableMessage $message): void
     {
         $this->setStatus(self::STATUS_NORMAL);
-        $this->addStatusMessage(StatusMessage::createInfoMessage($message, $parameters));
+        $this->addStatusMessage(StatusMessage::createInfoMessage($message));
     }
 
-    /**
-     * @param mixed[] $parameters
-     */
-    public function addWarning(string $message, array $parameters = []): void
+    #[Override]
+    public function addWarning(TranslatableMessage $message): void
     {
         $this->setStatus(self::STATUS_NORMAL);
-        $this->addStatusMessage(StatusMessage::createWarningMessage($message, $parameters));
+        $this->addStatusMessage(StatusMessage::createWarningMessage($message));
     }
 
+    #[Override]
     public function getStatus(): string
     {
         return $this->status;

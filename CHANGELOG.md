@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.0.0 [BC Break]
+
+* Change: Upgrade to PHP 8.3
+* Change: [BC] `TranslatableMessage` is now used instead of `$messageId` and `$parameters`
+* Add: Added some unit tests
+
+
 ## 1.2.0
 
 * Change: Upgrade to PHP 8.2 and improve code quality
