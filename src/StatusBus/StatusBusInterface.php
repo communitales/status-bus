@@ -26,13 +26,13 @@ interface StatusBusInterface
      */
     public function addStatusMessage(StatusMessage $statusMessage): void;
 
-    public function addError(TranslatableMessage $message): void;
+    public function addError(TranslatableMessage|string $message): void;
 
-    public function addSuccess(TranslatableMessage $message): void;
+    public function addSuccess(TranslatableMessage|string $message): void;
 
-    public function addInfo(TranslatableMessage $message): void;
+    public function addInfo(TranslatableMessage|string $message): void;
 
-    public function addWarning(TranslatableMessage $message): void;
+    public function addWarning(TranslatableMessage|string $message): void;
 
     public function getStatus(): string;
 }

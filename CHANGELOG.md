@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.1.1
+
+* Fix: Fix for `StatusBusInterface`.
+
+
 ## 2.1.0
 
 * Add: Instead of `TranslatableMessage` also `string` is allowed as Parameter for `StatusMessage`.

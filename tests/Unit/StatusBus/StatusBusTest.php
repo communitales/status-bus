@@ -28,7 +28,7 @@ class StatusBusTest extends TestCase
      */
     private ArrayObject $messagesList;
 
-    private StatusBus $statusBus;
+    private StatusBusInterface $statusBus;
 
     #[Override]
     protected function setUp(): void
