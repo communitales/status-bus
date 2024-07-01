@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.2.0
+
+* Add: Some convenience functions for `StatusMessage`.
+
+
 ## 2.1.1
 
 * Fix: Fix for `StatusBusInterface`.

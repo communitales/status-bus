@@ -8,9 +8,13 @@
 
 namespace Communitales\Component\StatusBus;
 
+use Override;
+use Stringable;
 use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Contracts\Translation\TranslatableInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class StatusMessage
+class StatusMessage implements Stringable, TranslatableInterface
 {
     // The message types are mapped to bootstrap color types
     public const string TYPE_SUCCESS = 'success';
@@ -31,6 +35,16 @@ class StatusMessage
      */
     public function __construct(private readonly string $type, private readonly TranslatableMessage|string $message)
     {
+    }
+
+    #[Override]
+    public function __toString(): string
+    {
+        if ($this->message instanceof TranslatableMessage) {
+            return $this->message->__toString();
+        }
+
+        return $this->message;
     }
 
     public static function createSuccessMessage(TranslatableMessage|string $message): StatusMessage
@@ -63,6 +77,15 @@ class StatusMessage
         return $this->message;
     }
 
+    public function getTranslatableMessage(): TranslatableMessage
+    {
+        if ($this->message instanceof TranslatableMessage) {
+            return $this->message;
+        }
+
+        return new TranslatableMessage($this->message);
+    }
+
     public function isShown(): bool
     {
         return $this->isShown;
@@ -71,5 +94,11 @@ class StatusMessage
     public function setIsShown(bool $isShown): void
     {
         $this->isShown = $isShown;
+    }
+
+    #[Override]
+    public function trans(TranslatorInterface $translator, ?string $locale = null): string
+    {
+        return $this->getTranslatableMessage()->trans($translator, $locale);
     }
 }

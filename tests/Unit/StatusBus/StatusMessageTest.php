@@ -43,4 +43,17 @@ class StatusMessageTest extends TestCase
         $message = $status->getMessage();
         $this->assertEquals('status.success', $message);
     }
+
+    public function testToString(): void
+    {
+        $status = StatusMessage::createSuccessMessage(
+            new TranslatableMessage('status.success')
+        );
+        self::assertEquals('status.success', (string)$status);
+
+        $status = StatusMessage::createSuccessMessage(
+            'status.success'
+        );
+        self::assertEquals('status.success', (string)$status);
+    }
 }
