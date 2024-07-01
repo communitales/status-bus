@@ -18,13 +18,29 @@ use Symfony\Component\Translation\TranslatableMessage;
  */
 class StatusMessageTest extends TestCase
 {
-    public function testCreateSuccessMessage()
+    public function testCreateSuccessMessageTranslatable(): void
     {
         $status = StatusMessage::createSuccessMessage(
             new TranslatableMessage('status.success')
         );
 
         $this->assertEquals('success', $status->getType());
-        $this->assertEquals('status.success', $status->getMessage()->getMessage());
+        $message = $status->getMessage();
+        if ($message instanceof TranslatableMessage) {
+            $this->assertEquals('status.success', $message->getMessage());
+        } else {
+            self::fail('Expected instance of TranslatableMessage');
+        }
+    }
+
+    public function testCreateSuccessMessageString(): void
+    {
+        $status = StatusMessage::createSuccessMessage(
+            'status.success'
+        );
+
+        $this->assertEquals('success', $status->getType());
+        $message = $status->getMessage();
+        $this->assertEquals('status.success', $message);
     }
 }

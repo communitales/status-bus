@@ -8,10 +8,10 @@
 
 namespace Communitales\Component\StatusBus;
 
-use Override;
 use Communitales\Component\Log\LogAwareTrait;
 use Communitales\Component\StatusBus\Handler\StatusBusHandlerInterface;
 use IteratorAggregate;
+use Override;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Translation\TranslatableMessage;
 use Throwable;
@@ -73,28 +73,28 @@ class StatusBus implements LoggerAwareInterface, StatusBusInterface
     }
 
     #[Override]
-    public function addError(TranslatableMessage $message): void
+    public function addError(TranslatableMessage|string $message): void
     {
         $this->setStatus(self::STATUS_ERROR);
         $this->addStatusMessage(StatusMessage::createErrorMessage($message));
     }
 
     #[Override]
-    public function addSuccess(TranslatableMessage $message): void
+    public function addSuccess(TranslatableMessage|string $message): void
     {
         $this->setStatus(self::STATUS_SUCCESS);
         $this->addStatusMessage(StatusMessage::createSuccessMessage($message));
     }
 
     #[Override]
-    public function addInfo(TranslatableMessage $message): void
+    public function addInfo(TranslatableMessage|string $message): void
     {
         $this->setStatus(self::STATUS_NORMAL);
         $this->addStatusMessage(StatusMessage::createInfoMessage($message));
     }
 
     #[Override]
-    public function addWarning(TranslatableMessage $message): void
+    public function addWarning(TranslatableMessage|string $message): void
     {
         $this->setStatus(self::STATUS_NORMAL);
         $this->addStatusMessage(StatusMessage::createWarningMessage($message));

@@ -44,8 +44,10 @@
             "@rector",
             "@phpcs",
             "@phpstan",
-            "@psalm"
-        ]    },
+            "@psalm",
+            "@test"
+        ]
+    },
     "config": {
         "sort-packages": true
     }

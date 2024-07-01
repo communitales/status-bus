@@ -13,6 +13,7 @@ use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -40,10 +41,14 @@ readonly class SymfonySessionFlashBagHandler implements StatusBusHandlerInterfac
 
         $locale = $request->getLocale();
 
-        if ($this->translator instanceof TranslatorInterface) {
-            $message = $statusMessage->getMessage()->trans($this->translator, $locale);
-        } else {
-            $message = $statusMessage->getMessage()->getMessage();
+        $message = $statusMessage->getMessage();
+
+        if ($message instanceof TranslatableMessage) {
+            if ($this->translator instanceof TranslatorInterface) {
+                $message = $message->trans($this->translator, $locale);
+            } else {
+                $message = $message->getMessage();
+            }
         }
 
         $session = $request->getSession();

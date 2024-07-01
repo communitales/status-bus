@@ -39,9 +39,24 @@ class StatusBusTest extends TestCase
         $this->statusBus = new StatusBus(new ArrayObject([$handler]));
     }
 
-    public function testAddError(): void
+    public function testAddErrorTranslatable(): void
     {
         $message = new TranslatableMessage('status.error');
+        $this->statusBus->addError($message);
+
+        $this->assertEquals(StatusBusInterface::STATUS_ERROR, $this->statusBus->getStatus());
+        $this->assertEquals(1, $this->messagesList->count());
+
+        /** @var StatusMessage $statusMessage */
+        $statusMessage = $this->messagesList->getIterator()->current();
+        $this->assertEquals($message, $statusMessage->getMessage());
+        $this->assertEquals(StatusMessage::TYPE_ERROR, $statusMessage->getType());
+        $this->assertTrue($statusMessage->isShown());
+    }
+
+    public function testAddErrorString(): void
+    {
+        $message = 'status.error';
         $this->statusBus->addError($message);
 
         $this->assertEquals(StatusBusInterface::STATUS_ERROR, $this->statusBus->getStatus());

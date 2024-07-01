@@ -1,9 +1,15 @@
 # CHANGELOG
 
+## 2.1.0
+
+* Add: Instead of `TranslatableMessage` also `string` is allowed as Parameter for `StatusMessage`.
+
+
 ## 2.0.0 [BC Break]
 
 * Change: Upgrade to PHP 8.3
-* Change: [BC] `TranslatableMessage` is now used instead of `$messageId` and `$parameters`
+* Change: [BC] `TranslatableMessage` is now used instead of `$messageId` and `$parameters` as Parameter
+  for `StatusMessage`.
 * Add: Added some unit tests
 
 

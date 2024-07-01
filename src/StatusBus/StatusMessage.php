@@ -29,26 +29,26 @@ class StatusMessage
     /**
      * @param string $type Should be one of the type constants.
      */
-    public function __construct(private readonly string $type, private readonly TranslatableMessage $message)
+    public function __construct(private readonly string $type, private readonly TranslatableMessage|string $message)
     {
     }
 
-    public static function createSuccessMessage(TranslatableMessage $message): StatusMessage
+    public static function createSuccessMessage(TranslatableMessage|string $message): StatusMessage
     {
         return new self(self::TYPE_SUCCESS, $message);
     }
 
-    public static function createErrorMessage(TranslatableMessage $message): StatusMessage
+    public static function createErrorMessage(TranslatableMessage|string $message): StatusMessage
     {
         return new self(self::TYPE_ERROR, $message);
     }
 
-    public static function createWarningMessage(TranslatableMessage $message): StatusMessage
+    public static function createWarningMessage(TranslatableMessage|string $message): StatusMessage
     {
         return new self(self::TYPE_WARNING, $message);
     }
 
-    public static function createInfoMessage(TranslatableMessage $message): StatusMessage
+    public static function createInfoMessage(TranslatableMessage|string $message): StatusMessage
     {
         return new self(self::TYPE_INFO, $message);
     }
@@ -58,7 +58,7 @@ class StatusMessage
         return $this->type;
     }
 
-    public function getMessage(): TranslatableMessage
+    public function getMessage(): TranslatableMessage|string
     {
         return $this->message;
     }
