@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * @copyright   Copyright (c) 2024 Communitales GmbH (https://www.communitales.com/)
+ * @copyright Copyright (c) 2020 - 2026 Communitales GmbH (https://www.communitales.com/)
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,6 +14,8 @@ namespace Communitales\Test\Unit\Component\StatusBus\StatusBus;
 use ArrayObject;
 use Communitales\Component\StatusBus\Handler\ArrayStatusBusHandler;
 use Communitales\Component\StatusBus\StatusBus;
+use Communitales\Component\StatusBus\StatusBusAwareInterface;
+use Communitales\Component\StatusBus\StatusBusAwareTrait;
 use Communitales\Component\StatusBus\StatusBusInterface;
 use Communitales\Component\StatusBus\StatusMessage;
 use Override;
@@ -21,14 +25,14 @@ use Symfony\Component\Translation\TranslatableMessage;
 /**
  * Class StatusBusTest
  */
-class StatusBusTest extends TestCase
+final class StatusBusTest extends TestCase implements StatusBusAwareInterface
 {
+    use StatusBusAwareTrait;
+
     /**
      * @var ArrayObject<array-key, StatusMessage>
      */
     private ArrayObject $messagesList;
-
-    private StatusBusInterface $statusBus;
 
     #[Override]
     protected function setUp(): void
@@ -44,8 +48,8 @@ class StatusBusTest extends TestCase
         $message = new TranslatableMessage('status.error');
         $this->statusBus->addError($message);
 
-        $this->assertEquals(StatusBusInterface::STATUS_ERROR, $this->statusBus->getStatus());
-        $this->assertEquals(1, $this->messagesList->count());
+        $this->assertSame(StatusBusInterface::STATUS_ERROR, $this->statusBus->getStatus());
+        $this->assertCount(1, $this->messagesList);
 
         /** @var StatusMessage $statusMessage */
         $statusMessage = $this->messagesList->getIterator()->current();
@@ -59,8 +63,8 @@ class StatusBusTest extends TestCase
         $message = 'status.error';
         $this->statusBus->addError($message);
 
-        $this->assertEquals(StatusBusInterface::STATUS_ERROR, $this->statusBus->getStatus());
-        $this->assertEquals(1, $this->messagesList->count());
+        $this->assertSame(StatusBusInterface::STATUS_ERROR, $this->statusBus->getStatus());
+        $this->assertCount(1, $this->messagesList);
 
         /** @var StatusMessage $statusMessage */
         $statusMessage = $this->messagesList->getIterator()->current();
@@ -74,7 +78,6 @@ class StatusBusTest extends TestCase
      */
     private function createMessageList(): ArrayObject
     {
-        /** @var ArrayObject<array-key, StatusMessage> */
         return new ArrayObject();
     }
 }

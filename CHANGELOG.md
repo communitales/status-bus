@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.3.0
+
+* Change: Upgrade minimum PHP to 8.4
+* Change: Add Support for Symfony 8.0
+* Change: Codequality
+
+
 ## 2.2.0
 
 * Add: Some convenience functions for `StatusMessage`.

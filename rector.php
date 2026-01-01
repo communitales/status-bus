@@ -1,19 +1,27 @@
 <?php
+
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use Rector\Set\ValueObject\LevelSetList;
-use Rector\Set\ValueObject\SetList;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->paths([
+return RectorConfig::configure()
+    ->withPaths([
         __DIR__.'/src',
         __DIR__.'/tests',
-    ]);
-    $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_83,
-        SetList::CODING_STYLE,
-        SetList::CODE_QUALITY,
-    ]);
-    $rectorConfig->importNames();
-};
+    ])
+    ->withSkip([
+        __DIR__.'/src/Entity',   // SetList::CODE_QUALITY macht da Mist
+    ])
+    ->withPreparedSets(
+        deadCode: true,
+        codeQuality: true,
+        codingStyle: true,
+        typeDeclarations: true,
+        phpunitCodeQuality: true,
+        doctrineCodeQuality: true,
+        symfonyCodeQuality: true
+    )
+    ->withPhpSets(php84: true)
+    ->withComposerBased(twig: true, doctrine: true, phpunit: true, symfony: true)
+    ->withImportNames()
+    ->withCache('var/cache/rector');

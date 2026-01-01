@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * @copyright   Copyright (c) 2024 Communitales GmbH (https://www.communitales.com/)
+ * @copyright Copyright (c) 2020 - 2026 Communitales GmbH (https://www.communitales.com/)
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,7 +18,7 @@ use Symfony\Component\Translation\TranslatableMessage;
 /**
  * Class StatusMessageTest
  */
-class StatusMessageTest extends TestCase
+final class StatusMessageTest extends TestCase
 {
     public function testCreateSuccessMessageTranslatable(): void
     {
@@ -24,10 +26,10 @@ class StatusMessageTest extends TestCase
             new TranslatableMessage('status.success')
         );
 
-        $this->assertEquals('success', $status->getType());
+        $this->assertSame('success', $status->getType());
         $message = $status->getMessage();
         if ($message instanceof TranslatableMessage) {
-            $this->assertEquals('status.success', $message->getMessage());
+            $this->assertSame('status.success', $message->getMessage());
         } else {
             self::fail('Expected instance of TranslatableMessage');
         }
@@ -39,9 +41,9 @@ class StatusMessageTest extends TestCase
             'status.success'
         );
 
-        $this->assertEquals('success', $status->getType());
+        $this->assertSame('success', $status->getType());
         $message = $status->getMessage();
-        $this->assertEquals('status.success', $message);
+        $this->assertSame('status.success', $message);
     }
 
     public function testToString(): void
@@ -49,11 +51,11 @@ class StatusMessageTest extends TestCase
         $status = StatusMessage::createSuccessMessage(
             new TranslatableMessage('status.success')
         );
-        self::assertEquals('status.success', (string)$status);
+        $this->assertSame('status.success', (string)$status);
 
         $status = StatusMessage::createSuccessMessage(
             'status.success'
         );
-        self::assertEquals('status.success', (string)$status);
+        $this->assertSame('status.success', (string)$status);
     }
 }
