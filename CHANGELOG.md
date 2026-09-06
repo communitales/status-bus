@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 3.0.0 [BC Break]
+
+* Change: Rebuild the component around a stateless, fire-and-forget `StatusBus`.
+* Change: Replace mutable status messages with an immutable translation descriptor.
+* Change: Replace string status and Bootstrap types with the `StatusLevel` enum.
+* Change: Replace `add*()` methods with `publish(StatusMessage $message)`.
+* Change: Remove aggregate status, message delivery state, property injection helpers, and `MessageException`.
+* Add: PSR-3 log handler with optional translation and structured context.
+* Add: Symfony flash handler that preserves translatable messages until presentation.
+* Add: Configurable delivery failure handlers for best-effort and fail-fast operation.
+* Add: In-memory handler for tests.
+* Change: Replace the `communitales/log` dependency with `psr/log`.
+
 ## 2.3.0
 
 * Change: Upgrade minimum PHP to 8.4

@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace Communitales\Component\StatusBus;
 
-/**
- * Class StatusBusAwareInterface
- */
-interface StatusBusAwareInterface
+enum StatusLevel: string
 {
-    public function setStatusBus(StatusBusInterface $statusBus): void;
+    case Error = 'error';
+    case Info = 'info';
+    case Success = 'success';
+    case Warning = 'warning';
 }

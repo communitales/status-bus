@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2020 - 2026 Communitales GmbH (https://www.communitales.com/)
  *
@@ -9,120 +11,43 @@
 
 namespace Communitales\Component\StatusBus;
 
-use Communitales\Component\Log\ExceptionLoggerInterface;
-use Communitales\Component\StatusBus\Handler\StatusBusHandlerInterface;
-use IteratorAggregate;
+use Communitales\Component\StatusBus\Failure\DeliveryFailureHandlerInterface;
+use Communitales\Component\StatusBus\Failure\LogAndContinueDeliveryFailureHandler;
+use Communitales\Component\StatusBus\Handler\StatusHandlerInterface;
 use Override;
-use Symfony\Component\Translation\TranslatableMessage;
 use Throwable;
 
-/**
- * Class StatusBus
- */
-class StatusBus implements StatusBusInterface
+final readonly class StatusBus implements StatusBusInterface
 {
     /**
-     * The status
+     * @var list<StatusHandlerInterface>
      */
-    private string $status = self::STATUS_NORMAL;
+    private array $handlers;
 
     /**
-     * @var StatusBusHandlerInterface[]
-     */
-    private array $statusBusHandlers = [];
-
-    /**
-     * @param IteratorAggregate<StatusBusHandlerInterface> $statusBusHandlers
+     * @param iterable<StatusHandlerInterface> $handlers
      */
     public function __construct(
-        iterable $statusBusHandlers,
-        private readonly ExceptionLoggerInterface $logger,
+        iterable $handlers,
+        private DeliveryFailureHandlerInterface $failureHandler = new LogAndContinueDeliveryFailureHandler(),
     ) {
-        try {
-            foreach ($statusBusHandlers->getIterator() as $statusBusHandler) {
-                $this->addStatusBusHandler($statusBusHandler);
+        $collectedHandlers = [];
+        foreach ($handlers as $handler) {
+            $collectedHandlers[] = $handler;
+        }
+
+        $this->handlers = $collectedHandlers;
+    }
+
+    #[Override]
+    public function publish(StatusMessage $message): void
+    {
+        foreach ($this->handlers as $handler) {
+            try {
+                $handler->handle($message);
+            } catch (Throwable $exception) {
+                $this->failureHandler->handleFailure($exception, $handler, $message);
             }
-        } catch (Throwable $throwable) {
-            $this->logger->logException($throwable);
-        }
-    }
-
-    public function addStatusBusHandler(StatusBusHandlerInterface $statusBusHandler): void
-    {
-        $this->statusBusHandlers[] = $statusBusHandler;
-    }
-
-    /**
-     * Send status message to all status bus handlers.
-     */
-    #[Override]
-    public function addStatusMessage(StatusMessage $statusMessage): void
-    {
-        // If the status message is already shown, do not show again
-        if ($statusMessage->isShown()) {
-            return;
-        }
-
-        // Send status message to all handlers
-        foreach ($this->statusBusHandlers as $statusBusHandler) {
-            $statusBusHandler->addStatusMessage($statusMessage);
-        }
-
-        // Mark status message as shown
-        $statusMessage->setIsShown(true);
-    }
-
-    #[Override]
-    public function addError(TranslatableMessage|string $message): void
-    {
-        $this->setStatus(self::STATUS_ERROR);
-        $this->addStatusMessage(StatusMessage::createErrorMessage($message));
-    }
-
-    #[Override]
-    public function addSuccess(TranslatableMessage|string $message): void
-    {
-        $this->setStatus(self::STATUS_SUCCESS);
-        $this->addStatusMessage(StatusMessage::createSuccessMessage($message));
-    }
-
-    #[Override]
-    public function addInfo(TranslatableMessage|string $message): void
-    {
-        $this->setStatus(self::STATUS_NORMAL);
-        $this->addStatusMessage(StatusMessage::createInfoMessage($message));
-    }
-
-    #[Override]
-    public function addWarning(TranslatableMessage|string $message): void
-    {
-        $this->setStatus(self::STATUS_NORMAL);
-        $this->addStatusMessage(StatusMessage::createWarningMessage($message));
-    }
-
-    #[Override]
-    public function getStatus(): string
-    {
-        return $this->status;
-    }
-
-    private function setStatus(string $status): void
-    {
-        switch ($status) {
-            case self::STATUS_NORMAL:
-                // Keep current status
-                break;
-            case self::STATUS_SUCCESS:
-                // If an error occurred, the status will not change
-                if ($this->status !== self::STATUS_ERROR) {
-                    $this->status = self::STATUS_SUCCESS;
-                }
-
-                break;
-            case self::STATUS_ERROR:
-                // Set status to error
-                $this->status = self::STATUS_ERROR;
-                break;
         }
     }
 }

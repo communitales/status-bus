@@ -17,91 +17,114 @@ use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class StatusMessage implements Stringable, TranslatableInterface
+final readonly class StatusMessage implements Stringable, TranslatableInterface
 {
-    // The message types are mapped to bootstrap color types
-    public const string TYPE_SUCCESS = 'success';
-
-    public const string TYPE_ERROR = 'danger';
-
-    public const string TYPE_WARNING = 'warning';
-
-    public const string TYPE_INFO = 'info';
-
     /**
-     * The message was already sent to the StatusBusHandlers
+     * @param array<string, mixed> $parameters
+     * @param array<string, mixed> $context
      */
-    private bool $isShown = false;
-
-    /**
-     * @param string $type Should be one of the type constants.
-     */
-    public function __construct(private readonly string $type, private readonly TranslatableMessage|string $message)
-    {
+    public function __construct(
+        private StatusLevel $level,
+        private string $message,
+        private array $parameters = [],
+        private ?string $domain = null,
+        private array $context = [],
+    ) {
     }
 
     #[Override]
     public function __toString(): string
     {
-        if ($this->message instanceof TranslatableMessage) {
-            return $this->message->getMessage();
-        }
-
         return $this->message;
     }
 
-    public static function createSuccessMessage(TranslatableMessage|string $message): StatusMessage
-    {
-        return new self(self::TYPE_SUCCESS, $message);
+    /**
+     * @param array<string, mixed> $parameters
+     * @param array<string, mixed> $context
+     */
+    public static function error(
+        string $message,
+        array $parameters = [],
+        ?string $domain = null,
+        array $context = [],
+    ): self {
+        return new self(StatusLevel::Error, $message, $parameters, $domain, $context);
     }
 
-    public static function createErrorMessage(TranslatableMessage|string $message): StatusMessage
-    {
-        return new self(self::TYPE_ERROR, $message);
+    /**
+     * @param array<string, mixed> $parameters
+     * @param array<string, mixed> $context
+     */
+    public static function info(
+        string $message,
+        array $parameters = [],
+        ?string $domain = null,
+        array $context = [],
+    ): self {
+        return new self(StatusLevel::Info, $message, $parameters, $domain, $context);
     }
 
-    public static function createWarningMessage(TranslatableMessage|string $message): StatusMessage
-    {
-        return new self(self::TYPE_WARNING, $message);
+    /**
+     * @param array<string, mixed> $parameters
+     * @param array<string, mixed> $context
+     */
+    public static function success(
+        string $message,
+        array $parameters = [],
+        ?string $domain = null,
+        array $context = [],
+    ): self {
+        return new self(StatusLevel::Success, $message, $parameters, $domain, $context);
     }
 
-    public static function createInfoMessage(TranslatableMessage|string $message): StatusMessage
-    {
-        return new self(self::TYPE_INFO, $message);
+    /**
+     * @param array<string, mixed> $parameters
+     * @param array<string, mixed> $context
+     */
+    public static function warning(
+        string $message,
+        array $parameters = [],
+        ?string $domain = null,
+        array $context = [],
+    ): self {
+        return new self(StatusLevel::Warning, $message, $parameters, $domain, $context);
     }
 
-    public function getType(): string
+    /** @return array<string, mixed> */
+    public function getContext(): array
     {
-        return $this->type;
+        return $this->context;
     }
 
-    public function getMessage(): TranslatableMessage|string
+    public function getDomain(): ?string
+    {
+        return $this->domain;
+    }
+
+    public function getLevel(): StatusLevel
+    {
+        return $this->level;
+    }
+
+    public function getMessage(): string
     {
         return $this->message;
     }
 
-    public function getTranslatableMessage(): TranslatableMessage
+    /** @return array<string, mixed> */
+    public function getParameters(): array
     {
-        if ($this->message instanceof TranslatableMessage) {
-            return $this->message;
-        }
-
-        return new TranslatableMessage($this->message);
+        return $this->parameters;
     }
 
-    public function isShown(): bool
+    public function toTranslatableMessage(): TranslatableMessage
     {
-        return $this->isShown;
-    }
-
-    public function setIsShown(bool $isShown): void
-    {
-        $this->isShown = $isShown;
+        return new TranslatableMessage($this->message, $this->parameters, $this->domain);
     }
 
     #[Override]
     public function trans(TranslatorInterface $translator, ?string $locale = null): string
     {
-        return $this->getTranslatableMessage()->trans($translator, $locale);
+        return $this->toTranslatableMessage()->trans($translator, $locale);
     }
 }

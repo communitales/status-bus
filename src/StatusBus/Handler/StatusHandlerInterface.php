@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2020 - 2026 Communitales GmbH (https://www.communitales.com/)
  *
@@ -7,14 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Communitales\Component\StatusBus;
+namespace Communitales\Component\StatusBus\Handler;
 
-trait StatusBusAwareTrait
+use Communitales\Component\StatusBus\StatusMessage;
+
+interface StatusHandlerInterface
 {
-    protected StatusBusInterface $statusBus;
-
-    public function setStatusBus(StatusBusInterface $statusBus): void
-    {
-        $this->statusBus = $statusBus;
-    }
+    public function handle(StatusMessage $message): void;
 }

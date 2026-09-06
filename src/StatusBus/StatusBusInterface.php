@@ -11,31 +11,7 @@ declare(strict_types=1);
 
 namespace Communitales\Component\StatusBus;
 
-use Symfony\Component\Translation\TranslatableMessage;
-
 interface StatusBusInterface
 {
-    /** Normal status of application */
-    public const string STATUS_NORMAL = 'NORMAL';
-
-    /** An action finished successfully */
-    public const string STATUS_SUCCESS = 'SUCCESS';
-
-    /** An action resulted in an error */
-    public const string STATUS_ERROR = 'ERROR';
-
-    /**
-     * Send status message to all status bus handlers.
-     */
-    public function addStatusMessage(StatusMessage $statusMessage): void;
-
-    public function addError(TranslatableMessage|string $message): void;
-
-    public function addSuccess(TranslatableMessage|string $message): void;
-
-    public function addInfo(TranslatableMessage|string $message): void;
-
-    public function addWarning(TranslatableMessage|string $message): void;
-
-    public function getStatus(): string;
+    public function publish(StatusMessage $message): void;
 }
