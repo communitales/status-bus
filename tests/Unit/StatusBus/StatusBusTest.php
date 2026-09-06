@@ -18,6 +18,7 @@ use Communitales\Component\StatusBus\StatusBus;
 use Communitales\Component\StatusBus\StatusMessage;
 use Override;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
@@ -28,6 +29,7 @@ use Stringable;
 #[CoversClass(InMemoryStatusHandler::class)]
 #[CoversClass(LogAndContinueDeliveryFailureHandler::class)]
 #[CoversClass(RethrowDeliveryFailureHandler::class)]
+#[UsesClass(StatusMessage::class)]
 final class StatusBusTest extends TestCase
 {
     public function testPublishesEveryMessageToEveryHandler(): void

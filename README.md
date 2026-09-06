@@ -1,5 +1,7 @@
 # Communitales StatusBus Component
 
+[![Codequality](https://github.com/communitales/status-bus/actions/workflows/codequality.yml/badge.svg)](https://github.com/communitales/status-bus/actions/workflows/codequality.yml)
+
 Publish status messages without coupling application code to their presentation.
 Messages can be sent to a PSR-3 logger, a Symfony session flash bag, or any custom
 handler.

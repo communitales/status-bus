@@ -13,6 +13,7 @@
 * Add: In-memory handler for tests.
 * Change: Replace the `communitales/log` dependency with `psr/log`.
 
+
 ## 2.3.0
 
 * Change: Upgrade minimum PHP to 8.4
@@ -38,8 +39,8 @@
 ## 2.0.0 [BC Break]
 
 * Change: Upgrade to PHP 8.3
-* Change: [BC] `TranslatableMessage` is now used instead of `$messageId` and `$parameters` as Parameter
-  for `StatusMessage`.
+* Change: [BC] `TranslatableMessage` is now used instead of `$messageId` and `$parameters` as Parameter for
+  `StatusMessage`.
 * Add: Added some unit tests
 
 
@@ -55,8 +56,8 @@
 
 ## 1.1.0
 
-* Change: Upgrade to Symfony 6. SymfonySessionFlashBagHandler requires
-  now `@Symfony\Component\HttpFoundation\RequestStack` instead of `@session` as first parameter.
+* Change: Upgrade to Symfony 6. SymfonySessionFlashBagHandler requires now
+  `@Symfony\Component\HttpFoundation\RequestStack` instead of `@session` as first parameter.
 
 
 ## 1.0.3

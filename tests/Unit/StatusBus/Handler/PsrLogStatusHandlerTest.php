@@ -13,12 +13,14 @@ namespace Communitales\Test\Unit\Component\StatusBus\Handler;
 use Communitales\Component\StatusBus\Handler\PsrLogStatusHandler;
 use Communitales\Component\StatusBus\StatusMessage;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[CoversClass(PsrLogStatusHandler::class)]
+#[UsesClass(StatusMessage::class)]
 final class PsrLogStatusHandlerTest extends TestCase
 {
     public function testLogsTranslatedMessageAndStructuredContext(): void
