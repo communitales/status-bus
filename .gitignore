@@ -1,6 +1,12 @@
-/.phpunit.cache
-/.phpunit.result.cache
-/composer.lock
+# Dependencies
+/vendor/
+
+# Local configuration
+/phpunit.xml
+
+# Generated files
+/var/
 /docs/TODO-phpstan.md
-/var/cache
-/vendor
+
+# Libraries should test against resolved dependency ranges
+/composer.lock

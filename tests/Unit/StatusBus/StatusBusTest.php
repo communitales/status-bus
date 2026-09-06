@@ -2,82 +2,136 @@
 
 declare(strict_types=1);
 
-/**
- * @copyright Copyright (c) 2020 - 2026 Communitales GmbH (https://www.communitales.com/)
+/*
+ * SPDX-FileCopyrightText: 2020 Communitales GmbH
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * SPDX-License-Identifier: MIT
  */
 
-namespace Communitales\Test\Unit\Component\StatusBus\StatusBus;
+namespace Communitales\Test\Unit\Component\StatusBus;
 
-use ArrayObject;
-use Communitales\Component\StatusBus\Handler\ArrayStatusBusHandler;
+use Communitales\Component\StatusBus\Failure\LogAndContinueDeliveryFailureHandler;
+use Communitales\Component\StatusBus\Failure\RethrowDeliveryFailureHandler;
+use Communitales\Component\StatusBus\Handler\InMemoryStatusHandler;
+use Communitales\Component\StatusBus\Handler\StatusHandlerInterface;
 use Communitales\Component\StatusBus\StatusBus;
-use Communitales\Component\StatusBus\StatusBusAwareInterface;
-use Communitales\Component\StatusBus\StatusBusAwareTrait;
-use Communitales\Component\StatusBus\StatusBusInterface;
 use Communitales\Component\StatusBus\StatusMessage;
 use Override;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Translation\TranslatableMessage;
+use Psr\Log\AbstractLogger;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
+use Stringable;
 
-/**
- * Class StatusBusTest
- */
-final class StatusBusTest extends TestCase implements StatusBusAwareInterface
+#[CoversClass(StatusBus::class)]
+#[CoversClass(InMemoryStatusHandler::class)]
+#[CoversClass(LogAndContinueDeliveryFailureHandler::class)]
+#[CoversClass(RethrowDeliveryFailureHandler::class)]
+#[UsesClass(StatusMessage::class)]
+final class StatusBusTest extends TestCase
 {
-    use StatusBusAwareTrait;
-
-    /**
-     * @var ArrayObject<array-key, StatusMessage>
-     */
-    private ArrayObject $messagesList;
-
-    #[Override]
-    protected function setUp(): void
+    public function testPublishesEveryMessageToEveryHandler(): void
     {
-        $this->messagesList = $this->createMessageList();
-        $handler = new ArrayStatusBusHandler($this->messagesList);
+        $firstHandler = new InMemoryStatusHandler();
+        $secondHandler = new InMemoryStatusHandler();
+        $bus = new StatusBus([$firstHandler, $secondHandler]);
+        $message = StatusMessage::info('Import started.');
 
-        $this->statusBus = new StatusBus(new ArrayObject([$handler]));
+        $bus->publish($message);
+        $bus->publish($message);
+
+        $this->assertSame([$message, $message], $firstHandler->messages());
+        $this->assertSame([$message, $message], $secondHandler->messages());
     }
 
-    public function testAddErrorTranslatable(): void
+    public function testContinuesAfterHandlerFailure(): void
     {
-        $message = new TranslatableMessage('status.error');
-        $this->statusBus->addError($message);
+        $exception = new RuntimeException('Broken handler');
+        $brokenHandler = new readonly class ($exception) implements StatusHandlerInterface {
+            public function __construct(private RuntimeException $exception)
+            {
+            }
 
-        $this->assertSame(StatusBusInterface::STATUS_ERROR, $this->statusBus->getStatus());
-        $this->assertCount(1, $this->messagesList);
+            #[Override]
+            public function handle(StatusMessage $message): void
+            {
+                throw $this->exception;
+            }
+        };
+        $workingHandler = new InMemoryStatusHandler();
+        $message = StatusMessage::warning('Partial import.');
 
-        /** @var StatusMessage $statusMessage */
-        $statusMessage = $this->messagesList->getIterator()->current();
-        $this->assertEquals($message, $statusMessage->getMessage());
-        $this->assertEquals(StatusMessage::TYPE_ERROR, $statusMessage->getType());
-        $this->assertTrue($statusMessage->isShown());
+        $logger = new class () extends AbstractLogger {
+            /** @var list<array{level: mixed, message: string|Stringable, context: array<string, mixed>}> */
+            public array $records = [];
+
+            /** @param array<string, mixed> $context */
+            #[Override]
+            public function log(mixed $level, string|Stringable $message, array $context = []): void
+            {
+                $this->records[] = [
+                    'context' => $context,
+                    'level' => $level,
+                    'message' => $message,
+                ];
+            }
+        };
+
+        $bus = new StatusBus(
+            [$brokenHandler, $workingHandler],
+            new LogAndContinueDeliveryFailureHandler($logger),
+        );
+
+        $bus->publish($message);
+
+        $this->assertCount(1, $logger->records);
+        $this->assertSame('error', $logger->records[0]['level']);
+        $this->assertSame('Status message delivery failed.', $logger->records[0]['message']);
+        $this->assertSame($exception, $logger->records[0]['context']['exception']);
+        $this->assertSame($brokenHandler::class, $logger->records[0]['context']['handler']);
+        $this->assertSame('warning', $logger->records[0]['context']['status_level']);
+        $this->assertSame('Partial import.', $logger->records[0]['context']['status_message']);
+        $this->assertSame([$message], $workingHandler->messages());
     }
 
-    public function testAddErrorString(): void
+    public function testRethrowsHandlerFailureWhenConfigured(): void
     {
-        $message = 'status.error';
-        $this->statusBus->addError($message);
+        $brokenHandler = new class () implements StatusHandlerInterface {
+            #[Override]
+            public function handle(StatusMessage $message): void
+            {
+                throw new RuntimeException('Broken handler');
+            }
+        };
+        $bus = new StatusBus([$brokenHandler], new RethrowDeliveryFailureHandler());
 
-        $this->assertSame(StatusBusInterface::STATUS_ERROR, $this->statusBus->getStatus());
-        $this->assertCount(1, $this->messagesList);
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageIsOrContains('Broken handler');
 
-        /** @var StatusMessage $statusMessage */
-        $statusMessage = $this->messagesList->getIterator()->current();
-        $this->assertEquals($message, $statusMessage->getMessage());
-        $this->assertEquals(StatusMessage::TYPE_ERROR, $statusMessage->getType());
-        $this->assertTrue($statusMessage->isShown());
+        $bus->publish(StatusMessage::error('Import failed.'));
     }
 
-    /**
-     * @return ArrayObject<array-key, StatusMessage>
-     */
-    private function createMessageList(): ArrayObject
+    public function testIgnoresFailureWhileLoggingFailure(): void
     {
-        return new ArrayObject();
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('error')
+            ->willThrowException(new RuntimeException('Logger failed'));
+
+        $handler = new class () implements StatusHandlerInterface {
+            #[Override]
+            public function handle(StatusMessage $message): void
+            {
+                throw new RuntimeException('Handler failed');
+            }
+        };
+
+        $bus = new StatusBus([$handler], new LogAndContinueDeliveryFailureHandler($logger));
+        $bus->publish(StatusMessage::error('Import failed.'));
+
+        $this->addToAssertionCount(1);
     }
 }

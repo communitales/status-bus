@@ -10,18 +10,20 @@
     "license": "MIT",
     "require": {
         "php": ">=8.4",
-        "communitales/log": "^3.1",
-        "symfony/http-foundation": "^7.0|^8.0",
-        "symfony/translation": "^7.0|^8.0"
+        "psr/log": "^3.0",
+        "symfony/http-foundation": "^7.4|^8.1",
+        "symfony/translation": "^7.4|^8.1",
+        "symfony/translation-contracts": "^3.6"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.92",
-        "phpstan/phpstan": "^2.1",
+        "esi/phpunit-coverage-check": "^3.1",
+        "friendsofphp/php-cs-fixer": "^v3.95",
+        "monolog/monolog": "^3.11",
+        "phpstan/phpstan": "^2.2",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
-        "phpstan/phpstan-symfony": "^2.0",
-        "phpunit/phpunit": "^12.5",
-        "rector/rector": "^2.3"
+        "phpunit/phpunit": "^13.3",
+        "rector/rector": "^2.6"
     },
     "autoload": {
         "psr-4": {
@@ -30,17 +32,17 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Communitales\\Test\\Unit\\Component\\StatusBus\\": "tests/Unit"
+            "Communitales\\Test\\Unit\\Component\\StatusBus\\": "tests/Unit/StatusBus"
         }
     },
     "scripts": {
-        "phpcs": "vendor/bin/php-cs-fixer fix",
-        "phpstan": "vendor/bin/phpstan analyse -c phpstan.dev.neon > docs/TODO-phpstan.md",
+        "php-cs-fixer": "vendor/bin/php-cs-fixer fix",
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon.dist",
         "rector": "vendor/bin/rector process",
         "test": "vendor/bin/phpunit",
         "codecheck": [
             "@rector",
-            "@phpcs",
+            "@php-cs-fixer",
             "@phpstan",
             "@test"
         ]
