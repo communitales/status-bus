@@ -9,21 +9,18 @@
 
 namespace Communitales\Component\StatusBus;
 
-use Communitales\Component\Log\LogAwareTrait;
+use Communitales\Component\Log\ExceptionLoggerInterface;
 use Communitales\Component\StatusBus\Handler\StatusBusHandlerInterface;
 use IteratorAggregate;
 use Override;
-use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Translation\TranslatableMessage;
 use Throwable;
 
 /**
  * Class StatusBus
  */
-class StatusBus implements LoggerAwareInterface, StatusBusInterface
+class StatusBus implements StatusBusInterface
 {
-    use LogAwareTrait;
-
     /**
      * The status
      */
@@ -37,14 +34,16 @@ class StatusBus implements LoggerAwareInterface, StatusBusInterface
     /**
      * @param IteratorAggregate<StatusBusHandlerInterface> $statusBusHandlers
      */
-    public function __construct(iterable $statusBusHandlers)
-    {
+    public function __construct(
+        iterable $statusBusHandlers,
+        private readonly ExceptionLoggerInterface $logger,
+    ) {
         try {
             foreach ($statusBusHandlers->getIterator() as $statusBusHandler) {
                 $this->addStatusBusHandler($statusBusHandler);
             }
         } catch (Throwable $throwable) {
-            $this->logException($throwable);
+            $this->logger->logException($throwable);
         }
     }
 

@@ -3,7 +3,15 @@
 use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
 $finder = (new PhpCsFixer\Finder())
-    ->in([__DIR__.'/src', __DIR__.'/tests']);
+    ->in(__DIR__)
+    ->exclude('var')
+    ->notPath([
+        'config/bundles.php',
+        'config/preload.php',
+        'config/reference.php',
+        'public/index.php',
+    ])
+;
 
 return (new PhpCsFixer\Config())
     ->setUnsupportedPhpVersionAllowed(true)
