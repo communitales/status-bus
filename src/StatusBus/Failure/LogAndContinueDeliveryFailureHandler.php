@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 /*
  * SPDX-FileCopyrightText: 2020 Communitales GmbH
- *
  * SPDX-License-Identifier: MIT
  */
 
@@ -19,9 +18,7 @@ use Throwable;
 
 final readonly class LogAndContinueDeliveryFailureHandler implements DeliveryFailureHandlerInterface
 {
-    public function __construct(private LoggerInterface $logger = new NullLogger())
-    {
-    }
+    public function __construct(private LoggerInterface $logger = new NullLogger()) {}
 
     #[Override]
     public function handleFailure(

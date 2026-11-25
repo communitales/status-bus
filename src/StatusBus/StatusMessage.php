@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 /*
  * SPDX-FileCopyrightText: 2020 Communitales GmbH
- *
  * SPDX-License-Identifier: MIT
  */
 
@@ -28,8 +27,7 @@ final readonly class StatusMessage implements Stringable, TranslatableInterface
         private array $parameters = [],
         private ?string $domain = null,
         private array $context = [],
-    ) {
-    }
+    ) {}
 
     #[Override]
     public function __toString(): string

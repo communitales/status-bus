@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 /*
  * SPDX-FileCopyrightText: 2020 Communitales GmbH
- *
  * SPDX-License-Identifier: MIT
  */
 
@@ -50,9 +49,7 @@ final class StatusBusTest extends TestCase
     {
         $exception = new RuntimeException('Broken handler');
         $brokenHandler = new readonly class ($exception) implements StatusHandlerInterface {
-            public function __construct(private RuntimeException $exception)
-            {
-            }
+            public function __construct(private RuntimeException $exception) {}
 
             #[Override]
             public function handle(StatusMessage $message): void
@@ -63,7 +60,7 @@ final class StatusBusTest extends TestCase
         $workingHandler = new InMemoryStatusHandler();
         $message = StatusMessage::warning('Partial import.');
 
-        $logger = new class () extends AbstractLogger {
+        $logger = new class extends AbstractLogger {
             /** @var list<array{level: mixed, message: string|Stringable, context: array<string, mixed>}> */
             public array $records = [];
 
@@ -98,7 +95,7 @@ final class StatusBusTest extends TestCase
 
     public function testRethrowsHandlerFailureWhenConfigured(): void
     {
-        $brokenHandler = new class () implements StatusHandlerInterface {
+        $brokenHandler = new class implements StatusHandlerInterface {
             #[Override]
             public function handle(StatusMessage $message): void
             {
@@ -121,7 +118,7 @@ final class StatusBusTest extends TestCase
             ->method('error')
             ->willThrowException(new RuntimeException('Logger failed'));
 
-        $handler = new class () implements StatusHandlerInterface {
+        $handler = new class implements StatusHandlerInterface {
             #[Override]
             public function handle(StatusMessage $message): void
             {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 /*
  * SPDX-FileCopyrightText: 2020 Communitales GmbH
- *
  * SPDX-License-Identifier: MIT
  */
 
@@ -19,9 +18,7 @@ use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 final readonly class SymfonyFlashStatusHandler implements StatusHandlerInterface
 {
-    public function __construct(private RequestStack $requestStack)
-    {
-    }
+    public function __construct(private RequestStack $requestStack) {}
 
     #[Override]
     public function handle(StatusMessage $message): void

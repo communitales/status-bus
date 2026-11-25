@@ -6,8 +6,9 @@ Publish status messages without coupling application code to their presentation.
 Messages can be sent to a PSR-3 logger, a Symfony session flash bag, or any custom
 handler.
 
-Status delivery is synchronous and best-effort. A failing handler does not affect
-the calling application or prevent other handlers from receiving the message.
+Status delivery is synchronous and best-effort by default. A failing handler does
+not affect the calling application or prevent other handlers from receiving the
+message. A custom failure strategy can change this behavior.
 
 ## Installation
 
@@ -49,6 +50,11 @@ factory methods are `success()`, `info()`, `warning()`, and `error()`.
 Translation parameters and the translation domain are presentation data.
 `context` contains structured diagnostic data for handlers such as the PSR-3
 logger and is not shown in flash messages.
+
+The log handler records the message, parameters, and context. Delivery failures
+also log the message and exception when a logger is configured. Avoid putting
+secrets or sensitive personal data in these fields, and configure appropriate
+access and retention controls for logs.
 
 ## Symfony configuration
 
@@ -117,6 +123,8 @@ to Bootstrap flash type `danger`.
 `LogAndContinueDeliveryFailureHandler` is the production strategy. It reports a
 failed delivery through a PSR-3 logger and lets the bus continue with the next
 handler. It also suppresses logger failures, preserving fire-and-forget behavior.
+The default instance uses a `NullLogger`, so failures are silent unless a logger is
+explicitly configured, as in the Symfony example above.
 
 Use `RethrowDeliveryFailureHandler` in development or tests when handler failures
 should fail immediately:
