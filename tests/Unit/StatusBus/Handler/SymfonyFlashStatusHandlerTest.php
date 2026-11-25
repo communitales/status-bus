@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 /*
  * SPDX-FileCopyrightText: 2020 Communitales GmbH
- *
  * SPDX-License-Identifier: MIT
  */
 
@@ -33,8 +32,7 @@ final class SymfonyFlashStatusHandlerTest extends TestCase
         $request = new Request();
         $request->setSession($session);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $handler = new SymfonyFlashStatusHandler($requestStack);
 
@@ -59,18 +57,17 @@ final class SymfonyFlashStatusHandlerTest extends TestCase
     #[DoesNotPerformAssertions]
     public function testDoesNothingWithoutRequestOrSession(): void
     {
-        $requestStack = new RequestStack();
-        $handler = new SymfonyFlashStatusHandler($requestStack);
+        $handler = new SymfonyFlashStatusHandler(new RequestStack());
 
         $handler->handle(StatusMessage::info('No request'));
 
-        $requestStack->push(new Request());
+        $handler = new SymfonyFlashStatusHandler(new RequestStack([new Request()]));
         $handler->handle(StatusMessage::info('No session'));
 
         $request = new Request();
         $request->setSession($this->createStub(SessionInterface::class));
 
-        $requestStack->push($request);
+        $handler = new SymfonyFlashStatusHandler(new RequestStack([$request]));
         $handler->handle(StatusMessage::info('No flash bag'));
     }
 }

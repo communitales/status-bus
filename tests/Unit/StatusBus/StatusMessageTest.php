@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 /*
  * SPDX-FileCopyrightText: 2020 Communitales GmbH
- *
  * SPDX-License-Identifier: MIT
  */
 
@@ -38,7 +37,7 @@ final class StatusMessageTest extends TestCase
         );
 
         $this->assertSame('order.created', $message->getMessage());
-        $this->assertSame('order.created', (string)$message);
+        $this->assertSame('order.created', (string) $message);
         $this->assertSame(['%order%' => 'A-42'], $message->getParameters());
         $this->assertSame('status', $message->getDomain());
         $this->assertSame(['order_id' => 42], $message->getContext());

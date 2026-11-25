@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.0.1
+
+* Add: Contribution and security reporting guidelines.
+* Change: Clarify logging and delivery failure behavior in the documentation.
+
+
 ## 3.0.0 [BC Break]
 
 * Change: Rebuild the component around a stateless, fire-and-forget `StatusBus`.

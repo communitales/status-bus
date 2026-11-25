@@ -11,19 +11,18 @@
     "require": {
         "php": ">=8.4",
         "psr/log": "^3.0",
-        "symfony/http-foundation": "^7.4|^8.1",
-        "symfony/translation": "^7.4|^8.1",
+        "symfony/http-foundation": "^7.4 || ^8.1",
+        "symfony/translation": "^7.4 || ^8.1",
         "symfony/translation-contracts": "^3.6"
     },
     "require-dev": {
-        "esi/phpunit-coverage-check": "^3.1",
-        "friendsofphp/php-cs-fixer": "^v3.95",
-        "monolog/monolog": "^3.11",
-        "phpstan/phpstan": "^2.2",
-        "phpstan/phpstan-deprecation-rules": "^2.0",
-        "phpstan/phpstan-phpunit": "^2.0",
-        "phpunit/phpunit": "^13.3",
-        "rector/rector": "^2.6"
+        "friendsofphp/php-cs-fixer": "^3.95.32",
+        "monolog/monolog": "^3.13",
+        "phpstan/phpstan": "^2.3.7",
+        "phpstan/phpstan-deprecation-rules": "^2.0.6",
+        "phpstan/phpstan-phpunit": "^2.1.3",
+        "phpunit/phpunit": "^13.4.8",
+        "rector/rector": "^2.9.2"
     },
     "autoload": {
         "psr-4": {
@@ -37,8 +36,10 @@
     },
     "scripts": {
         "php-cs-fixer": "vendor/bin/php-cs-fixer fix",
+        "php-cs-fixer-check": "vendor/bin/php-cs-fixer fix --dry-run --diff",
         "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon.dist",
         "rector": "vendor/bin/rector process",
+        "rector-check": "vendor/bin/rector process --dry-run",
         "test": "vendor/bin/phpunit",
         "codecheck": [
             "@rector",
@@ -48,6 +49,7 @@
         ]
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "bump-after-update": true
     }
 }

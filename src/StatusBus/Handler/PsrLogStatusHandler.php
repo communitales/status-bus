@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 /*
  * SPDX-FileCopyrightText: 2020 Communitales GmbH
- *
  * SPDX-License-Identifier: MIT
  */
 
@@ -23,8 +22,7 @@ final readonly class PsrLogStatusHandler implements StatusHandlerInterface
         private LoggerInterface $logger,
         private ?TranslatorInterface $translator = null,
         private ?string $locale = null,
-    ) {
-    }
+    ) {}
 
     #[Override]
     public function handle(StatusMessage $message): void
